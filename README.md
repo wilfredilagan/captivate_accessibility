@@ -6,10 +6,10 @@ for a launch of a Virtual Learning Enviroment, so some of the fixes may not work
 
 Fixes:
 
-Adds a skip to main content link
-Makes links appear as <a> tags
-Adds H1's and H2's to each slide
+Adds a skip to main content link <br>
+Makes links appear as a tags<br>
+Adds H1's and H2's to each slide <br>
 Attempts to correct tab order on each slide when Web Objects are on a slide
-Clears value of textboxes
+Clears value of textboxes<br>
 
 
