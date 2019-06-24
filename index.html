@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="@LANG">
+<head>
+<meta name='viewport' content='initial-scale = 1, minimum-scale = 1, maximum-scale = 1'/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="IE=10">
+<title>@MOVIETITLE</title>
+<style type="text/css">#initialLoading{background:url(assets/htmlimages/loader.gif) no-repeat center center;background-color:#ffffff;position:absolute;margin:auto;top:0;left:0;right:0;bottom:0;z-index:10010;}</style>
+
+<script>
+
+var deviceReady = false;
+var initCalled = false ;
+var initialized = false;
+
+function onBodyLoad()
+{
+	if(typeof window.device === 'undefined')
+	{
+		document.addEventListener("deviceready", onDeviceReady, false);
+	}
+	else
+	{
+		onDeviceReady();
+	}
+}
+
+function onDeviceReady()
+{
+	deviceReady = true ;
+	if(initCalled === true)
+		initializeCP();
+}
+
+function initializeCP()
+{
+	if(initialized)
+		return;
+	initCalled = true ;
+	if(cp.pg && deviceReady === false)
+		return;
+
+	function cpInit()
+	{
+		document.body.innerHTML = " @HTML5_DIV_STRUCTURE <div id='initialLoading'></div>";
+		cp.DoCPInit();
+		var lCpExit = window["DoCPExit"];
+		window["DoCPExit"] = function()
+		{
+			if(cp.UnloadActivties)
+				cp.UnloadActivties();
+			lCpExit();
+		};
+	}
+	
+	cpInit();
+	initialized = true;
+}
+
+</script>
+ </head>
+<body onload="onBodyLoad()">
+		<div id='initialLoading'></div>
+<script>
+		(function()
+		{
+			if(document.documentMode < 9)
+			{
+				document.body.innerHTML = "";
+				document.write("The content you are trying to view is not supported in the current Document Mode of Internet Explorer. Change the Document Mode to Internet Explorer 9 Standards and try to view the content again.<br>To change the Document Mode, press F12, click Document Mode: <current mode>, and then select Internet Explorer 9 Standards.");
+				return;
+			}
+			window.addEventListener("load",function() 
+			{
+				setTimeout(function() 
+				{					
+					var script = document.createElement('script');
+					script.type = 'text/javascript';
+					script.src = 'assets/js/CPXHRLoader.js';
+					script.defer = 'defer';
+					script.onload = function()
+					{
+						var lCSSLoaded = false;
+						var lJSLoaded = false;
+						function constructDIVs()
+						{
+							if(lCSSLoaded && lJSLoaded)
+							{
+								initializeCP();
+							}
+						}
+						cpXHRJSLoader.css('assets/css/CPLibraryAll.css',function() {
+							lCSSLoaded = true;
+							constructDIVs();
+						});
+						var lJSFiles = [ @JSFILES_ARRAY , 'assets/libraries/Infosemantics_CpExtra.js' ];
+						cpXHRJSLoader.js(lJSFiles,function()
+						{
+							//console.log("js loaded");
+
+							var imagesJSONFiles = [ 'dr/imgmd.json' ];
+							cpXHRJSLoader.loadImagesJSON(imagesJSONFiles,function(imageToJSONPathMap){
+								cp.imageToJSONPathMap = imageToJSONPathMap;
+								var imageJSONFiles = [ @IMAGE_JSON_FILES ];
+								if(window.location.protocol.substr(0,4) == "file")
+									cpXHRJSLoader.preloadURLs(imageJSONFiles, constructDIVs);
+								lJSLoaded = true;
+								if(window.location.protocol.substr(0,4) != "file" || !imageJSONFiles.length)
+									constructDIVs();
+							});
+						});
+					}
+					document.getElementsByTagName('head')[0].appendChild(script);
+				},1);
+			},false);
+		})();
+		
+</script>
+<script src="assets/js/AODAfixes.js" crossorigin="anonymous"></script>
+<noscript style="text-align:center;font-size:24px;">Enable Javascript support in the browser.</noscript>
+</body>
+</html>
